@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Followers</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <style>
+        .profile-picture {
+            max-width: 100px;
+            max-height: 100px;
+
+        }
+    </style>
+</head>
+
+<body class="follow-body">
+    <%- include('includes/navbar') %>
+        <ul>
+            <% followers.forEach(follower=> { %>
+                <li class="follower-item">
+                    <a href="/profile/<%= follower.username %>">
+                        <img src="/user-data/<%= follower.username %>/profilePicture.png" alt="Profile Picture"
+                            class="profile-picture">
+                    </a>
+                    <a href="/profile/<%= follower.username %>" class="follower-info">
+                        <%= follower.username %>
+                    </a>
+                    <span class="follower-info">Followers: <%= follower.followers.length %></span>
+                    <span class="follower-info">Following: <%= follower.following.length %></span>
+                </li>
+                <% }); %>
+        </ul>
+</body>
+
+</html>

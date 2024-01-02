@@ -1,0 +1,47 @@
+<nav class="navbar">
+    <div class="nav-wrapper">
+        <img src="/img/logo.png" class="brand-img" onclick="window.location.href='/'">
+
+        <input type="text" class="search-box" placeholder="search" id="search-box">
+        <div class="nav-items">
+            <a href="<%= username ? " /" : "/login" %>">
+                <img src="/img/home.png" class="icon">
+            </a>
+            <a href="<%= username ? " /chat" : "/login" %>">
+                <img src="/img/send.png" class="icon">
+            </a>
+            <a href="#" onclick="searchProfile()" class="search-btn">
+                <img src="/img/explore.png" class="icon">
+            </a>
+            <a href="<%= username ? " /posts/create" : "/login" %>">
+                <img src="/img/add.png" class="icon">
+            </a>
+
+            <% if (username) { %>
+                <a href="/profile/<%= username %>" class="icon">
+                    <div class="user-profile">
+                        <img src="/user-data/<%= username %>/profilePicture.png" alt="Profile Picture"
+                            class="small-picture">
+                    </div>
+                </a>
+                <% } else { %>
+                    <a href="/login"><img src="/img/option.png" class="icon"></a>
+                    <% } %>
+        </div>
+    </div>
+</nav>
+
+<script>
+    function searchProfile() {
+        var searchQuery = document.getElementById('search-box').value;
+        if (searchQuery) {
+            window.location.href = '/profile/' + encodeURIComponent(searchQuery);
+        }
+    }
+
+    document.getElementById('search-box').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            searchProfile();
+        }
+    });
+</script>

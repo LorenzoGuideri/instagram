@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/chat.css">
+</head>
+
+<body>
+    <%- include('includes/navbar') %>
+        <div id="app">
+            <div id="sidebar">
+                <% users.forEach(user=> { %>
+                    <div class="user" id="user-div-<%= user._id %>">
+                        <img src="/user-data/<%= user.username %>/profilePicture.png" style="height: 30px;border-radius: 50%;margin: auto; padding-left: 5px;">
+                        <button onclick="selectUser('<%= user._id %>')" id="user-button-<%= user._id %>">
+                            <%= user.username %>
+                        </button>
+                    </div>
+                    <% }); %>
+            </div>
+            <div id="chat-container">
+                <div id="chatArea">
+                    <% messages.forEach(message=> { %>
+                        <div class="message">
+                            <%= message.text %>
+                        </div>
+                        <% }); %>
+                </div>
+                <input type="text" id="message-input" placeholder="Type a message...">
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+        <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+        <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload - PIG</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+    <%- include('includes/navbar') %>
+
+        <div class="upload-container">
+            <form action="/posts/create" method="POST" enctype="multipart/form-data" class="upload-form">
+                <input type="file" id="upload-img" name="data" class="upload-img-input" onchange="validateForm()">
+                <label for="upload-img" class="upload-img-label">Click to upload image</label>
+
+                <div class="image-preview" id="image-preview">
+                    <!-- Image preview will be shown here -->
+                </div>
+                <% if (message) { %>
+                    <div id=message><%= message %></div>
+                <% } %> 
+
+                <input type="text" id="title" name="title" placeholder="Title of the post" class="title-input" required>
+
+                <button type="submit" class="upload-btn" id="upload-btn" disabled>Upload</button>
+            </form>
+        </div>
+
+        <script>
+            function validateForm() {
+                var preview = document.getElementById('image-preview');
+                var uploadButton = document.getElementById('upload-btn');
+                var file = document.getElementById('upload-img').files[0];
+                var reader = new FileReader();
+
+                // Ensure the loading bar is not duplicated
+                if (!document.querySelector('.loading-bar')) {
+                    var loadingBar = document.createElement('div');
+                    loadingBar.className = 'loading-bar';
+                    preview.appendChild(loadingBar);
+                } else {
+                    var loadingBar = document.querySelector('.loading-bar');
+                }
+
+                reader.onloadstart = function () {
+                    loadingBar.style.width = '50%'; // Halfway during loading
+                }
+
+                reader.onloadend = function () {
+                    loadingBar.style.width = '100%'; // Full width when loading is complete
+
+                    if (file && file.type.match('image.*')) {
+                        preview.style.backgroundImage = 'url(' + reader.result + ')';
+                        uploadButton.disabled = false;
+                    } else {
+                        preview.style.backgroundImage = 'none';
+                        uploadButton.disabled = true;
+                        loadingBar.style.width = '0%'; // Reset loading bar
+                        if (file && !file.type.match('image.*')) {
+                            alert("Please select an image file.");
+                        }
+                    }
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.style.backgroundImage = 'none';
+                    uploadButton.disabled = true;
+                    loadingBar.style.width = '0%'; // Reset loading bar if no file is selected
+                }
+            }
+        </script>
+
+</body>
+
+</html>

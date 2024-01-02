@@ -1,0 +1,20 @@
+# Specific files
+db
+yarn.lock
+package-lock.json
+node_modules
+
+# Logs
+*.log
+
+# GOD FORBID SOMEONE USES A MAC
+.DS_Store
+
+# VSCode
+/.vscode
+
+# Windows
+Thumbs.db
+
+# Bin
+/bin/

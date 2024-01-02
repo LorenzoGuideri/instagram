@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PIG - Social Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+    <%- include('includes/navbar') %>
+
+        <section class="main">
+
+            <div class="wrapper">
+                <div class="left-col">
+
+                    <% posts.forEach( (post)=> { %>
+                        <div class="post">
+                            <div class="info">
+                                <div class="user">
+                                    <a href="/profile/<%= post.createdBy %>" class="profile-pic-link">
+                                        <div class="profile-pic">
+                                            <img src="/user-data/<%= post.createdBy %>/profilePicture.png"
+                                                alt="<%= post.createdBy %>'s profile picture">
+                                        </div>
+                                        <p class="username">
+                                            <a href="/profile/<%= post.createdBy %>">
+                                                <%= post.createdBy %>
+                                            </a>
+                                        </p>
+                                </div>
+                            </div>
+
+                            <img src="<%= post.content %>" alt="post image" , class="post-image">
+
+                            <div class="post-content">
+                                <div class="reaction-wrapper">
+                                    <% let userLiked=post.likes.includes(currentUserId); %>
+                                        <img src="<%= userLiked ? 'img/like-f.png' : 'img/like.png' %>"
+                                            class="icon like-btn" alt="" onclick="toggleLike('<%= post._id %>')"
+                                            id="like-icon-<%= post._id %>">
+                                        <p class="likes" id="likes-count-<%= post._id %>">
+                                            <%= post.likes.length %> likes
+                                        </p>
+                                </div>
+
+                                <p class="description"><span>
+                                        <%= post.createdBy %>
+                                    </span>
+                                    <%= post.title %>
+                                </p>
+                                <p class="post-time">
+                                    <% let postDate=new Date(post.createdAt); %>
+                                        <%= postDate.toDateString() + ' ' + postDate.toLocaleTimeString() %>
+                                </p>
+
+                                <form action="/comment/<%= post._id %>/create" method="post" class="comment-box">
+                                    <label for="content">Comment: </label>
+                                    <input type="text" id="content" name="content" required>
+                                    <button type="submit">Submit</button>
+                                </form>
+
+                                <div class="comment-wrapper">
+                                    <% comments.forEach( (comment)=> { %>
+                                        <% if (comment.postId==post._id) { %>
+                                            <span class="comment">
+                                                <span class="comment-user">
+                                                    <h1>
+                                                        <%= comment.user %>
+                                                    </h1>
+                                                </span>
+                                                <h3>
+                                                    <%= comment.content %>
+                                                </h3>
+                                            </span>
+                                            <% } %>
+                                                <% }); %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% }); %>
+
+
+                </div>
+            </div>
+
+        </section>
+
+        <script>
+            function toggleLike(postId) {
+                fetch('/' + postId + '/like', {
+                    method: 'POST'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        const likeIcon = document.getElementById('like-icon-' + postId);
+                        const likesCount = document.getElementById('likes-count-' + postId);
+                        if (data.liked) {
+
+                            likeIcon.src = 'img/like-f.png';
+                        } else {
+                            likeIcon.src = 'img/like.png';
+                        }
+                        likesCount.innerText = data.likes + ' likes';
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        </script>
+
+</body>
+
+</html>

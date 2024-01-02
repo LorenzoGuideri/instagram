@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Profile - PIG</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+    <%- include('includes/navbar') %>
+
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="/user-data/<%= visitedUsername %>/profilePicture.png" alt="Profile Picture"
+                    class="profile-picture">
+                <h2 class="username">
+                    <%= visitedUsername %>
+                </h2> <!-- Display user's username -->
+
+                <!-- Follow/Unfollow Button -->
+                <% if (! (currentUser._id==profileUserId)) { %>
+                    <button id="follow-btn" onclick="followUnfollow('<%= visitedUsername %>')" class="prof-btn">
+                        <%= isFollowing ? 'Unfollow' : 'Follow' %>
+                    </button>
+                    <% } %>
+
+                        <% if (currentUser._id==profileUserId) { %>
+                            <button id="change-pic-btn" onclick="document.getElementById('fileInput').click()"
+                                class="prof-btn">Change
+                                Profile Picture</button>
+                            <form id="profilePicForm" action="/profile/<%= username %>/changePFP" method="post"
+                                enctype="multipart/form-data" style="display: none;">
+                                <input type="file" id="fileInput" name="profilePicture"
+                                    onchange="submitProfilePicForm()">
+                            </form>
+                            <% } %>
+
+                                <!-- Display user's followers and following count -->
+
+                                <div class="user-stats">
+                                    <span class="followers"> Followers:</span>
+                                    <span id="followersCounter" class="followers">
+                                        <%= followersCount %>
+                                    </span>
+                                    <span class="followers"> Following:</span>
+                                    <span id="folloingCounter" class="following">
+                                        <%= followingCount %>
+                                    </span>
+                                </div>
+
+                                <!-- View followers button -->
+                                <div class="profile-buttons">
+                                    <button onclick="location.href='/followers/<%= visitedUsername %>'"
+                                        class="prof-btn">View
+                                        Followers</button>
+                                    <button onclick="location.href='/following/<%= visitedUsername %>'"
+                                        class="prof-btn">View
+                                        Following</button>
+                                </div>
+            </div>
+
+            <div class="post-grid">
+
+
+                <!-- <div class="wrapper"> -->
+
+                    <% posts.forEach( (post)=> { %>
+                        
+                    <div class="post-item"> 
+
+                            <img src="/<%= post.content %>" alt="post image" , class="post-image">
+
+                    </div>
+
+                    <% }); %>
+
+
+                <!-- </div> -->
+            </div>
+        </div>
+        </div>
+
+
+        <script>
+            function followUnfollow(visitedUsername) {
+
+                console.log("PRESSED TO FOLLOW ");
+
+                const followButton = document.getElementById('follow-btn');
+                const isFollowing = followButton.innerText === 'Follow';
+                const url = `/profile/${isFollowing ? 'follow' : 'unfollow'}/${visitedUsername}`;
+                const method = 'POST';
+
+                const followersCounter = document.getElementById('followersCounter');
+                const followingCounter = document.getElementById('folloingCounter');
+
+
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+
+                            // Toggle profile text
+
+                            followButton.innerText = isFollowing ? 'Unfollow' : 'Follow';
+                            followersCounter.innerText = isFollowing ? parseInt(followersCounter.innerText) + 1 : parseInt(followersCounter.innerText) - 1;
+                            // followingCounter.innerText = isFollowing ? parseInt(followingCounter.innerText) + 1 : parseInt(followingCounter.innerText) - 1;
+
+
+
+                        } else {
+                            console.error('Failed to perform action');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+
+            function submitProfilePicForm() {
+                document.getElementById('profilePicForm').submit();
+            }
+        </script>
+</body>
+
+</html>

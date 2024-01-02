@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login - PIG</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body class="login-body">
+
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="/img/logo.png" alt="PIG Logo">
+        </div>
+        <div class="login-box">
+            <h2>Welcome Back!</h2>
+            <p class="login-text">Login to continue</p>
+
+            <% if (loginError) { %>
+                <p id="message">User not found. Please try again.</p>
+                <% } %>
+
+                    <form action="/login" method="POST" class="login-form">
+                        <div class="input-group">
+                            <input type="text" id="login" name="username" placeholder="Enter your login" required>
+                        </div>
+                        <button type="submit" class="login-btn">Login</button>
+                    </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
